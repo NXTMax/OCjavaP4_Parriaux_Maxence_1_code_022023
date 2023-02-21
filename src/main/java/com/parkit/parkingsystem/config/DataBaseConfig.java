@@ -16,8 +16,8 @@ public class DataBaseConfig {
                 "jdbc:mysql://localhost:3306/prod","root","rootroot");
     }
 
-    public void closeConnection(Connection con){
-        if(con!=null){
+    public void closeConnection(Connection con) {
+        if(con!=null) {
             try {
                 con.close();
                 logger.info("Closing DB connection");
@@ -28,7 +28,7 @@ public class DataBaseConfig {
     }
 
     public void closePreparedStatement(PreparedStatement ps) {
-        if(ps!=null){
+        if(ps!=null) {
             try {
                 ps.close();
                 logger.info("Closing Prepared Statement");
@@ -39,7 +39,7 @@ public class DataBaseConfig {
     }
 
     public void closeResultSet(ResultSet rs) {
-        if(rs!=null){
+        if(rs!=null) {
             try {
                 rs.close();
                 logger.info("Closing Result Set");

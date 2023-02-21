@@ -8,7 +8,7 @@ public class DataBasePrepareService {
 
     DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 
-    public void clearDataBaseEntries(){
+    public void clearDataBaseEntries() {
         Connection connection = null;
         try{
             connection = dataBaseTestConfig.getConnection();
@@ -19,9 +19,9 @@ public class DataBasePrepareService {
             //clear ticket entries;
             connection.prepareStatement("truncate table ticket").execute();
 
-        }catch(Exception e){
+        } catch(Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             dataBaseTestConfig.closeConnection(connection);
         }
     }
