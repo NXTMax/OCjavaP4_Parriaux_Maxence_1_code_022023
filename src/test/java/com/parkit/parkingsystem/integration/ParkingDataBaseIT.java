@@ -53,8 +53,7 @@ public class ParkingDataBaseIT {
     public void testParkingACar() {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
-        //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
-        assertEquals("ABCDEF", ticketDAO.getTicket("ABCDEF").getVehicleRegNumber());
+        assertNotNull(ticketDAO.getTicket("ABCDEF"));
     }
 
     @Test
@@ -62,7 +61,8 @@ public class ParkingDataBaseIT {
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
-        //TODO: check that the fare generated and out time are populated correctly in the database
+        assertNotNull(ticketDAO.getTicket("ABCDEF").getOutTime());
+        //TODO: Assert for correct fare
     }
 
 }
