@@ -1,7 +1,8 @@
 package com.parkit.parkingsystem.service;
 
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.*;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,27 +10,32 @@ import org.apache.logging.log4j.Logger;
 public class InteractiveShell {
 
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
+    private static InputReaderUtil inputReaderUtil;
 
     public static void loadInterface() {
         logger.info("App initialized!!!");
         System.out.println("Welcome to Parking System!");
 
         boolean continueApp = true;
-        InputReaderUtil inputReaderUtil = new InputReaderUtil();
+        inputReaderUtil = new InputReaderUtil();
         ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
         TicketDAO ticketDAO = new TicketDAO();
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
 
         while(continueApp) {
             loadMenu();
             int option = inputReaderUtil.readSelection();
             switch(option) {
                 case 1: {
-                    parkingService.processIncomingVehicle();
+                    Ticket newTicket = parkingService.processIncomingVehicle(getVehichleType(), getVehichleRegNumber());
+                    System.out.println("Please park your vehicle in spot number:" + newTicket.getParkingSpot().getId());
+                    System.out.println("Recorded in-time for vehicle number:" + newTicket.getVehicleRegNumber() + " is:" + newTicket.getInTime());
                     break;
                 }
                 case 2: {
-                    parkingService.processExitingVehicle();
+                    Ticket terminatedTicket = parkingService.processExitingVehicle(getVehichleRegNumber());
+                    System.out.println("Please pay the parking fare:" + terminatedTicket.getPrice());
+                    System.out.println("Recorded out-time for vehicle number:" + terminatedTicket.getVehicleRegNumber() + " is:" + terminatedTicket.getOutTime());
                     break;
                 }
                 case 3: {
@@ -47,6 +53,34 @@ public class InteractiveShell {
         System.out.println("1 New Vehicle Entering - Allocate Parking Space");
         System.out.println("2 Vehicle Exiting - Generate Ticket Price");
         System.out.println("3 Shutdown System");
+    }
+
+    private static ParkingType getVehichleType() {
+        System.out.println("Please select vehicle type from menu");
+        System.out.println("1 CAR");
+        System.out.println("2 BIKE");
+        int input = inputReaderUtil.readSelection();
+        switch(input) {
+            case 1: {
+                return ParkingType.CAR;
+            }
+            case 2: {
+                return ParkingType.BIKE;
+            }
+            default: {
+                System.out.println("Incorrect input provided");
+                throw new IllegalArgumentException("Entered input is invalid");
+            }
+        }
+    }
+
+    private static String getVehichleRegNumber() {
+        System.out.println("Please type the vehicle registration number and press enter key");
+        while (true) {
+            try { return inputReaderUtil.readVehicleRegistrationNumber(); }
+            catch (IllegalArgumentException e) { continue; }
+            catch (Exception e) { return null; }
+        }
     }
 
 }
