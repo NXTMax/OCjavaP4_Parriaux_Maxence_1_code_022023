@@ -6,7 +6,6 @@ import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
-import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +23,6 @@ public class ParkingServiceTest {
     private static ParkingService parkingService;
 
     @Mock
-    private static InputReaderUtil inputReaderUtil;
-    @Mock
     private static ParkingSpotDAO parkingSpotDAO;
     @Mock
     private static TicketDAO ticketDAO;
@@ -33,8 +30,6 @@ public class ParkingServiceTest {
     @BeforeEach
     private void setUpPerTest() {
         try {
-            when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-
             ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
             Ticket ticket = new Ticket();
             ticket.setInTime(LocalDateTime.now().minusHours(1));
@@ -45,7 +40,7 @@ public class ParkingServiceTest {
 
             when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
-            parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+            parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
         } catch (Exception e) {
             e.printStackTrace();
             throw  new RuntimeException("Failed to set up test mock objects");
@@ -54,7 +49,7 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingVehicleTest() {
-        parkingService.processExitingVehicle();
+        parkingService.processExitingVehicle("ABCEDF");
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
 
