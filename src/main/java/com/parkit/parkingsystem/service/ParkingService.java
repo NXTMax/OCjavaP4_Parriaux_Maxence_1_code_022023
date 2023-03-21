@@ -14,7 +14,7 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+    private static FareCalculatorService fareCalculatorService;
 
     private ParkingSpotDAO parkingSpotDAO;
     private  TicketDAO ticketDAO;
@@ -22,6 +22,7 @@ public class ParkingService {
     public ParkingService(ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO) {
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
+        fareCalculatorService = new FareCalculatorService(ticketDAO);
     }
 
     public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) {
