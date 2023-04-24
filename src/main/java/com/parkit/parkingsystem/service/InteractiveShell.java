@@ -27,13 +27,13 @@ public class InteractiveShell {
             int option = inputReaderUtil.readSelection();
             switch(option) {
                 case 1: {
-                    Ticket newTicket = parkingService.processIncomingVehicle(getVehichleType(), getVehichleRegNumber());
+                    Ticket newTicket = parkingService.processIncomingVehicle(getVehicleType(), getVehicleRegNumber());
                     System.out.println("Please park your vehicle in spot number:" + newTicket.getParkingSpot().getId());
                     System.out.println("Recorded in-time for vehicle number:" + newTicket.getVehicleRegNumber() + " is:" + newTicket.getInTime());
                     break;
                 }
                 case 2: {
-                    Ticket terminatedTicket = parkingService.processExitingVehicle(getVehichleRegNumber());
+                    Ticket terminatedTicket = parkingService.processExitingVehicle(getVehicleRegNumber());
                     System.out.println("Please pay the parking fare:" + terminatedTicket.getPrice());
                     System.out.println("Recorded out-time for vehicle number:" + terminatedTicket.getVehicleRegNumber() + " is:" + terminatedTicket.getOutTime());
                     break;
@@ -55,7 +55,7 @@ public class InteractiveShell {
         System.out.println("3 Shutdown System");
     }
 
-    private static ParkingType getVehichleType() {
+    private static ParkingType getVehicleType() {
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
         System.out.println("2 BIKE");
@@ -74,7 +74,7 @@ public class InteractiveShell {
         }
     }
 
-    private static String getVehichleRegNumber() {
+    private static String getVehicleRegNumber() {
         System.out.println("Please type the vehicle registration number and press enter key");
         while (true) {
             try { return inputReaderUtil.readVehicleRegistrationNumber(); }
