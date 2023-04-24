@@ -36,7 +36,9 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(LocalDateTime.now());
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
+
+        double expectedFare = Fare.CAR_RATE_PER_HOUR * (1 - Fare.FREETIME.toMinutes() / 60.0);
+        assertEquals(expectedFare, ticket.getPrice());
     }
 
     @Test
@@ -47,7 +49,9 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(LocalDateTime.now());
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
+
+        double expectedFare = Fare.BIKE_RATE_PER_HOUR * (1 - Fare.FREETIME.toMinutes() / 60.0);
+        assertEquals(expectedFare, ticket.getPrice());
     }
 
     @Test
@@ -78,7 +82,9 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(LocalDateTime.now());
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
+
+        double expectedFare = Fare.BIKE_RATE_PER_HOUR * (0.75 - Fare.FREETIME.toMinutes() / 60.0);
+        assertEquals(expectedFare, ticket.getPrice());
     }
 
     @Test
@@ -89,7 +95,9 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(LocalDateTime.now());
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals((0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
+
+        double expectedFare = Fare.CAR_RATE_PER_HOUR * (0.75 - Fare.FREETIME.toMinutes() / 60.0);
+        assertEquals(expectedFare , ticket.getPrice());
     }
 
     @Test
@@ -100,7 +108,9 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(LocalDateTime.now());
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals((24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+        
+        double expectedFare = Fare.CAR_RATE_PER_HOUR * (24.0 - Fare.FREETIME.toMinutes() / 60.0);
+        assertEquals(expectedFare, ticket.getPrice());
     }
 
 }

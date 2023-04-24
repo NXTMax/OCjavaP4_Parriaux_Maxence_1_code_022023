@@ -12,14 +12,15 @@ public class FareCalculatorService {
         }
 
         Duration ticketDuration = Duration.between(ticket.getInTime(), ticket.getOutTime());
+        Duration paidDuration = ticketDuration.minus(Fare.FREETIME).isNegative() ? Duration.ZERO : ticketDuration.minus(Fare.FREETIME);
 
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                ticket.setPrice(ticketDuration.toMinutes() * Fare.CAR_RATE_PER_HOUR / 60);
+                ticket.setPrice(paidDuration.toMinutes() * Fare.CAR_RATE_PER_HOUR / 60);
                 break;
             }
             case BIKE: {
-                ticket.setPrice(ticketDuration.toMinutes() * Fare.BIKE_RATE_PER_HOUR / 60);
+                ticket.setPrice(paidDuration.toMinutes() * Fare.BIKE_RATE_PER_HOUR / 60);
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
