@@ -19,6 +19,11 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    public static enum getQueries {
+        currentTicket,
+        lastRecentTicket
+    }
+
     public boolean saveTicket(Ticket ticket) {
         Connection con = null;
         try {
@@ -40,12 +45,13 @@ public class TicketDAO {
         }
     }
 
-    public Ticket getTicket(String vehicleRegNumber) {
+    public Ticket getTicket(String vehicleRegNumber, getQueries queryType) {
         Connection con = null;
         Ticket ticket = null;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+            String sqlQuery = queryType == getQueries.currentTicket ? DBConstants.GET_TICKET : DBConstants.GET_LAST_RECENT_TICKET;
+            PreparedStatement ps = con.prepareStatement(sqlQuery);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
@@ -63,7 +69,7 @@ public class TicketDAO {
             dataBaseConfig.closePreparedStatement(ps);
             return ticket;
         } catch (Exception ex) {
-            logger.error("Error fetching next available slot", ex);
+            logger.error("Error retrieving ticket from database", ex);
             return null;
         } finally {
             dataBaseConfig.closeConnection(con);

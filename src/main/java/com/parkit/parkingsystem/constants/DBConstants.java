@@ -11,4 +11,8 @@ public class DBConstants {
                                             "FROM ticket t, parking p " +
                                             "WHERE p.parking_number = t.parking_number AND t.VEHICLE_REG_NUMBER=? " +
                                             "ORDER BY t.IN_TIME  LIMIT 1";
+    public static final String GET_LAST_RECENT_TICKET =  "SELECT t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE " +
+                                                        "FROM ticket t, parking p " +
+                                                        "WHERE p.parking_number = t.parking_number AND t.VEHICLE_REG_NUMBER=? AND t.OUT_TIME > date_sub(now(), interval 15 days)" +
+                                                        "ORDER BY t.OUT_TIME DESC  LIMIT 1";
 }
