@@ -3,6 +3,7 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.dao.TicketDAO.getQueries;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +15,7 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+    private static FareCalculatorService fareCalculatorService;
 
     private ParkingSpotDAO parkingSpotDAO;
     private  TicketDAO ticketDAO;
@@ -22,9 +23,11 @@ public class ParkingService {
     public ParkingService(ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO) {
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
+        fareCalculatorService = new FareCalculatorService(ticketDAO);
     }
 
     public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) {
+        Ticket ticket = null;
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable(parkingType);
             if(parkingSpot !=null && parkingSpot.getId() > 0) {
@@ -32,7 +35,7 @@ public class ParkingService {
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
                 LocalDateTime inTime = LocalDateTime.now();
-                Ticket ticket = new Ticket();
+                ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
                 //ticket.setId(ticketID);
                 ticket.setParkingSpot(parkingSpot);
@@ -42,12 +45,11 @@ public class ParkingService {
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
                 logger.trace("Generated Ticket and saved in DB");
-                return ticket;
             }
         } catch(Exception e) {
             logger.error("Unable to process incoming vehicle",e);
         }
-        finally { return null; }
+        return ticket;        
     }
 
     public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType) {
@@ -69,8 +71,9 @@ public class ParkingService {
     }
 
     public Ticket processExitingVehicle(String vehicleRegNumber) {
-        try{
-            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
+        Ticket ticket = null;
+        try {
+            ticket = ticketDAO.getTicket(vehicleRegNumber, getQueries.currentTicket);
             LocalDateTime outTime = LocalDateTime.now();
             ticket.setOutTime(outTime);
             fareCalculatorService.calculateFare(ticket);
@@ -78,13 +81,12 @@ public class ParkingService {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
-                return ticket;
             } else{
                 System.out.println("Unable to update ticket information. Error occurred");
             }
         } catch(Exception e) {
             logger.error("Unable to process exiting vehicle",e);
         }
-        finally { return null; }
+        return ticket;
     }
 }
