@@ -168,7 +168,7 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
 
         fareCalculatorService.calculateFare(ticket);
-        double expectedFare = 60 * Fare.CAR_RATE_PER_HOUR * (1 - Fare.REGULAR_USER_DISCOUNT) / 60;
+        double expectedFare = (60 - Fare.FREETIME.toMinutes()) * Fare.CAR_RATE_PER_HOUR * (1 - Fare.REGULAR_USER_DISCOUNT) / 60;
         assertEquals(expectedFare, ticket.getPrice());
     }
 }
