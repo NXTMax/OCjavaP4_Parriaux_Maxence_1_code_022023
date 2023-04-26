@@ -15,15 +15,15 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static FareCalculatorService fareCalculatorService;
+    private FareCalculatorService fareCalculatorService;
 
     private ParkingSpotDAO parkingSpotDAO;
-    private  TicketDAO ticketDAO;
+    private TicketDAO ticketDAO;
 
     public ParkingService(ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO) {
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
-        fareCalculatorService = new FareCalculatorService(ticketDAO);
+        this.fareCalculatorService = new FareCalculatorService(ticketDAO);
     }
 
     public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) {
@@ -32,7 +32,7 @@ public class ParkingService {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable(parkingType);
             if(parkingSpot !=null && parkingSpot.getId() > 0) {
                 parkingSpot.setAvailable(false);
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
+                parkingSpotDAO.updateParking(parkingSpot); //allot this parking space and mark it's availability as false
 
                 LocalDateTime inTime = LocalDateTime.now();
                 ticket = new Ticket();
