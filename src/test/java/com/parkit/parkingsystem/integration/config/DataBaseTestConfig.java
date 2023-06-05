@@ -13,8 +13,10 @@ public class DataBaseTestConfig extends DataBaseConfig {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
+        if (DbConfig.isEmpty()) loadConfig();
         return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/test","root","rootroot");
+            String.format("jdbc:mysql://%s/%s", DbConfig.getProperty("test.hostname"), DbConfig.getProperty("test.database")),
+            DbConfig.getProperty("test.username"), DbConfig.getProperty("test.password"));
     }
 
     public void closeConnection(Connection con) {
