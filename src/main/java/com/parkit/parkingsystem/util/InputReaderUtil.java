@@ -3,8 +3,11 @@ package com.parkit.parkingsystem.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.parkit.parkingsystem.Generated;
+
 import java.util.Scanner;
 
+@Generated
 public class InputReaderUtil {
 
     private static Scanner scan = new Scanner(System.in, "utf-8");

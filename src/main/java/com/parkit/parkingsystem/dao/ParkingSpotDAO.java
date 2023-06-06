@@ -40,7 +40,7 @@ public class ParkingSpotDAO {
     }
 
     public boolean updateParking(ParkingSpot parkingSpot) {
-        //update the availability fo that parking slot
+        //update the availability of that parking slot
         Connection con = null;
         PreparedStatement ps = null;
         try {
