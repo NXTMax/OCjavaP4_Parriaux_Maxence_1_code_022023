@@ -49,7 +49,7 @@ public class ParkingService {
         } catch(Exception e) {
             logger.error("Unable to process incoming vehicle",e);
         }
-        return ticket;        
+        return ticket;
     }
 
     public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType) {
@@ -62,8 +62,6 @@ public class ParkingService {
             } else{
                 throw new Exception("Error fetching parking number from DB. Parking slots might be full");
             }
-        } catch(IllegalArgumentException ie) {
-            logger.error("Error parsing user input for type of vehicle", ie);
         } catch(Exception e) {
             logger.error("Error fetching next available parking slot", e);
         }
@@ -82,7 +80,7 @@ public class ParkingService {
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
             } else{
-                System.out.println("Unable to update ticket information. Error occurred");
+                ticket = null;
             }
         } catch(Exception e) {
             logger.error("Unable to process exiting vehicle",e);

@@ -34,6 +34,10 @@ public class InteractiveShell {
                 }
                 case 2: {
                     Ticket terminatedTicket = parkingService.processExitingVehicle(getVehicleRegNumber());
+                    if (terminatedTicket == null) {
+                        System.out.println("Unable to update ticket information. Error occurred");
+                        break;
+                    }
                     System.out.println("Please pay the parking fare:" + terminatedTicket.getPrice());
                     System.out.println("Recorded out-time for vehicle number:" + terminatedTicket.getVehicleRegNumber() + " is:" + terminatedTicket.getOutTime());
                     break;
