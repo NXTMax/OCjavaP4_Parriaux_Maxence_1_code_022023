@@ -62,10 +62,11 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF");
         
-        Ticket ticket = ticketDAO.getTicket("ABCDEF", getQueries.currentTicket);
-        ticket.setInTime(ticket.getInTime().minusHours(1));
-        ticketDAO.updateTicket(ticket); // updateTicket() only updates outTime and price
+        // Ticket ticket = ticketDAO.getTicket("ABCDEF", getQueries.currentTicket);
+        // ticket.setInTime(ticket.getInTime().minusHours(1));
+        // ticketDAO.updateTicket(ticket); // updateTicket() only updates outTime and price
         
+        try {Thread.sleep(500);} catch(InterruptedException e) {}
         parkingService.processExitingVehicle("ABCDEF"); // updates ticket's outTime to 'now'
         assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getOutTime());
         // assertEquals(Fare.CAR_RATE_PER_HOUR, ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getPrice()); // therefore fails
