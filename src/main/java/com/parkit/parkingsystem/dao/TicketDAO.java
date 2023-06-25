@@ -24,6 +24,11 @@ public class TicketDAO {
         lastRecentTicket
     }
 
+    /**
+     * Creates a new ticket in database
+     * @param ticket The ticket to save in database
+     * @return {@code true} if the operation succeeds
+     */
     public boolean saveTicket(Ticket ticket) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -47,6 +52,15 @@ public class TicketDAO {
         }
     }
 
+    /**
+     * Retrieves a database ticket from its {@code VehicleRegNumber}
+     * @param vehicleRegNumber License plate of the vehicle to retrieve ticket(s) for
+     * @param queryType <ul>
+     *                    <li> {@code getQueries.currentTicket}: retrieves for the ongoing ticket for the vehicle.
+     *                    <li> {@code getQueries.lastRecentTicket}: retrieves the most last terminated ticket for the vehicle that is less that 15 days old.
+     *                  </ul>
+     * @return The retrieved Ticket
+     */
     public Ticket getTicket(String vehicleRegNumber, getQueries queryType) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -81,6 +95,11 @@ public class TicketDAO {
         }
     }
 
+    /**
+     * Updates in the database, the ticket with the same Id as the given {@code ticket}
+     * @param ticket The new representation of the ticket
+     * @return {@code true} if the operation succeeds
+     */
     public boolean updateTicket(Ticket ticket) {
         Connection con = null;
         PreparedStatement ps = null;

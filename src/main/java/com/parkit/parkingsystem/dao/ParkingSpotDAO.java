@@ -16,6 +16,11 @@ public class ParkingSpotDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Queries the database to find the first (smallest ID) available parkingSlot that has {@code TYPE} matching {@code parkingType}
+     * @param parkingType The type of the parkingSlot to search for
+     * @return The ID of the found parkingSlot
+     */
     public int getNextAvailableSlot(ParkingType parkingType) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -39,6 +44,11 @@ public class ParkingSpotDAO {
         return result;
     }
 
+    /**
+     * Updates a parking spot in the database
+     * @param parkingSpot The new parking spot object (ID must be the same as in the DB)
+     * @return {@code true} if the operation succeeds
+     */
     public boolean updateParking(ParkingSpot parkingSpot) {
         //update the availability of that parking slot
         Connection con = null;

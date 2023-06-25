@@ -26,6 +26,13 @@ public class ParkingService {
         this.fareCalculatorService = new FareCalculatorService(ticketDAO);
     }
 
+    /**
+     * Finds an available parking slot and creates a ticket for the incoming vehicle
+     * @param parkingType The type of the incoming vehicle
+     * (either {@code ParkingType.CAR} or {@code ParkingType.BIKE})
+     * @param vehicleRegNumber The license plate of the incoming vehicle
+     * @return The created ticket
+     */
     public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) {
         Ticket ticket = null;
         try{
@@ -52,6 +59,12 @@ public class ParkingService {
         return ticket;
     }
 
+    /**
+     * Calls {@code getNextAvailableSlot(parkingType)} and handles some bound cases and DB errors
+     * @param parkingType The type of parking slot to searing for
+     * (either {@code ParkingType.CAR} or {@code ParkingType.BIKE})
+     * @return The first (smallest ID) parking slot matching the provided parking type
+     */
     public ParkingSpot getNextParkingNumberIfAvailable(ParkingType parkingType) {
         int parkingNumber=0;
         ParkingSpot parkingSpot = null;
@@ -68,6 +81,12 @@ public class ParkingService {
         return parkingSpot;
     }
 
+    /**
+     * Of the ticket bound to the given {@code vehicleRegNumber}, updates its OutTime and Fare,
+     * then sets the corresponding parking slot as available
+     * @param vehicleRegNumber The license plate of the leaving vehicle
+     * @return The updated ticket
+     */
     public Ticket processExitingVehicle(String vehicleRegNumber) {
         Ticket ticket = null;
         try {

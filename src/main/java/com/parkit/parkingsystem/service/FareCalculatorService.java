@@ -14,6 +14,10 @@ public class FareCalculatorService {
         this.ticketDAO = ticketDAO;
     }
 
+    /**
+     * Calculates and updates the ticket's fare
+     * @param ticket The ticket the user wants to end and pay for
+     */
     public void calculateFare(Ticket ticket) {
         if((ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
