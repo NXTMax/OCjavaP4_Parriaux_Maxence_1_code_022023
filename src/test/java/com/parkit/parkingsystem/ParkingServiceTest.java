@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,6 +62,19 @@ public class ParkingServiceTest {
     public void processIncomingVehicle_FailTest() {
         when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
         assertEquals(null, parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF"));
+    }
+
+    /**
+     * It should throw an exception when trying to get a second ticket for a same vehicle
+     */
+    @Test
+    public void processIncomingVehicle_DuplicateFailTest() {
+        Ticket registeredTicket = new Ticket();
+        registeredTicket.setVehicleRegNumber("ABCDEF");
+
+        when(ticketDAO.getTicket("ABCDEF", getQueries.ongoingTicket)).thenReturn(registeredTicket);
+
+        assertThrows(UnsupportedOperationException.class, () -> parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF"));
     }
 
     /**
