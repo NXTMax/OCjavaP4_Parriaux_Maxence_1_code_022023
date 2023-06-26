@@ -51,7 +51,7 @@ public class ParkingDataBaseIT {
     public void testParkingACar() {
         ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF");
-        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.currentTicket));
+        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.ongoingTicket));
     }
 
     /**
@@ -68,7 +68,7 @@ public class ParkingDataBaseIT {
         
         try {Thread.sleep(500);} catch(InterruptedException e) {}
         parkingService.processExitingVehicle("ABCDEF"); // updates ticket's outTime to 'now'
-        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getOutTime());
+        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.ongoingTicket).getOutTime());
         // assertEquals(Fare.CAR_RATE_PER_HOUR, ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getPrice()); // therefore fails
     }
 

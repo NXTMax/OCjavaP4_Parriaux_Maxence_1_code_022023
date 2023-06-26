@@ -20,7 +20,7 @@ public class TicketDAO {
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     public static enum getQueries {
-        currentTicket,
+        ongoingTicket,
         lastRecentTicket
     }
 
@@ -69,7 +69,7 @@ public class TicketDAO {
         Ticket ticket = null;
         try {
             con = dataBaseConfig.getConnection();
-            String sqlQuery = queryType == getQueries.currentTicket ? DBConstants.GET_TICKET : DBConstants.GET_LAST_RECENT_TICKET;
+            String sqlQuery = queryType == getQueries.ongoingTicket ? DBConstants.GET_ONGOING_TICKET : DBConstants.GET_LAST_RECENT_TICKET;
             ps = con.prepareStatement(sqlQuery);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);

@@ -74,7 +74,7 @@ public class ParkingServiceTest {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
 
-        when(ticketDAO.getTicket(anyString(), eq(getQueries.currentTicket))).thenReturn(ticket);
+        when(ticketDAO.getTicket(anyString(), eq(getQueries.ongoingTicket))).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
         
@@ -94,7 +94,7 @@ public class ParkingServiceTest {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
 
-        when(ticketDAO.getTicket(anyString(), eq(getQueries.currentTicket))).thenReturn(ticket);
+        when(ticketDAO.getTicket(anyString(), eq(getQueries.ongoingTicket))).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
         
         assertNull(parkingService.processExitingVehicle("ABCDEF"));
