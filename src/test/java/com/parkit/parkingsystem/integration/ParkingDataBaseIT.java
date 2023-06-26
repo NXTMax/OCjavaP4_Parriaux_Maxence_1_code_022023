@@ -17,6 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
+
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 
@@ -51,7 +53,7 @@ public class ParkingDataBaseIT {
     public void testParkingACar() {
         ParkingService parkingService = new ParkingService(parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF");
-        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.currentTicket));
+        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.ongoingTicket));
     }
 
     /**
@@ -68,7 +70,7 @@ public class ParkingDataBaseIT {
         
         try {Thread.sleep(500);} catch(InterruptedException e) {}
         parkingService.processExitingVehicle("ABCDEF"); // updates ticket's outTime to 'now'
-        assertNotNull(ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getOutTime());
+        assertTrue(ticketDAO.getTicket("ABCDEF", getQueries.lastRecentTicket).getOutTime().isAfter(LocalDateTime.now().minusSeconds(2)));
         // assertEquals(Fare.CAR_RATE_PER_HOUR, ticketDAO.getTicket("ABCDEF", getQueries.currentTicket).getPrice()); // therefore fails
     }
 

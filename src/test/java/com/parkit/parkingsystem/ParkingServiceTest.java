@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,6 +65,19 @@ public class ParkingServiceTest {
     }
 
     /**
+     * It should throw an exception when trying to get a second ticket for a same vehicle
+     */
+    @Test
+    public void processIncomingVehicle_DuplicateFailTest() {
+        Ticket registeredTicket = new Ticket();
+        registeredTicket.setVehicleRegNumber("ABCDEF");
+
+        when(ticketDAO.getTicket("ABCDEF", getQueries.ongoingTicket)).thenReturn(registeredTicket);
+
+        assertThrows(UnsupportedOperationException.class, () -> parkingService.processIncomingVehicle(ParkingType.CAR, "ABCDEF"));
+    }
+
+    /**
      * It should fill in ticket's out time and price upon termination
      */
     @Test
@@ -74,7 +88,7 @@ public class ParkingServiceTest {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
 
-        when(ticketDAO.getTicket(anyString(), eq(getQueries.currentTicket))).thenReturn(ticket);
+        when(ticketDAO.getTicket(anyString(), eq(getQueries.ongoingTicket))).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
         
@@ -94,7 +108,7 @@ public class ParkingServiceTest {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
 
-        when(ticketDAO.getTicket(anyString(), eq(getQueries.currentTicket))).thenReturn(ticket);
+        when(ticketDAO.getTicket(anyString(), eq(getQueries.ongoingTicket))).thenReturn(ticket);
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
         
         assertNull(parkingService.processExitingVehicle("ABCDEF"));

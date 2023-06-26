@@ -29,7 +29,17 @@ public class InteractiveShell {
             int option = inputReaderUtil.readSelection();
             switch(option) {
                 case 1: {
-                    Ticket newTicket = parkingService.processIncomingVehicle(getVehicleType(), getVehicleRegNumber());
+                    Ticket newTicket = null;
+                    try {
+                        newTicket = parkingService.processIncomingVehicle(getVehicleType(), getVehicleRegNumber());                        
+                        if (newTicket == null) {
+                            System.out.println("Unable to issue ticket. Error occurred");
+                            break;
+                        }
+                    } catch (UnsupportedOperationException e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    }
                     System.out.println("Please park your vehicle in spot number:" + newTicket.getParkingSpot().getId());
                     System.out.println("Recorded in-time for vehicle number:" + newTicket.getVehicleRegNumber() + " is:" + newTicket.getInTime());
                     break;
