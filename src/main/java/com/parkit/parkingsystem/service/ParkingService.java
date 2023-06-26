@@ -33,9 +33,12 @@ public class ParkingService {
      * @param vehicleRegNumber The license plate of the incoming vehicle
      * @return The created ticket
      */
-    public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) {
+    public Ticket processIncomingVehicle(ParkingType parkingType, String vehicleRegNumber) throws UnsupportedOperationException {
         Ticket ticket = null;
         try{
+            if (ticketDAO.getTicket(vehicleRegNumber, getQueries.ongoingTicket) != null) {
+                throw new UnsupportedOperationException("Cannot create two tickets for the same vehicle");
+            }
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable(parkingType);
             if(parkingSpot !=null && parkingSpot.getId() > 0) {
                 parkingSpot.setAvailable(false);
@@ -53,6 +56,8 @@ public class ParkingService {
                 ticketDAO.saveTicket(ticket);
                 logger.trace("Generated Ticket and saved in DB");
             }
+        } catch(UnsupportedOperationException unsupOpEx) {
+            throw unsupOpEx;
         } catch(Exception e) {
             logger.error("Unable to process incoming vehicle",e);
         }
